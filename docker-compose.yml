@@ -1,0 +1,15 @@
+version: '3.9'
+
+services:
+  api:
+    build: .
+    container_name: dapp-fapi
+    command: uvicorn main:app --host 0.0.0.0 --reload
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    restart: always
+
+volumes:
+  .:
