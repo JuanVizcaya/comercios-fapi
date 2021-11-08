@@ -60,13 +60,3 @@ class EmpleadoRetrieve(BaseModel):
 
     class Config:
         orm_mode = True
-
-
-class EmpleadoUpdate(BaseModel):
-    nombre: Optional[str]
-    apellidos: Optional[str]
-    pin: Optional[str]
-    activo: Optional[bool]
-
-    class Config:
-        orm_mode = True

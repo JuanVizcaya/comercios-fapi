@@ -64,11 +64,15 @@ Se trata de un FastAPI Backend, con los métodos suficientes para administrar co
 
 ## Pruebas
 
-**virtualenv/conda**
+Se realizaron las pruebas para el backend con [pytest](https://docs.pytest.org/en/latest/) y [flake8](https://flake8.readthedocs.io/en/latest/)
+
+Las pruebas furon realizadas para la creacion de comercios y el CRUD de empleados mediante su comercio asociado.
+
+**Ejecutar con virtualenv/conda**
 
 - `tox`
 
-**Contenedor**
+**Ejecutar con Contenedor**
 
 - `docker-compose run --rm api tox`
 
@@ -77,3 +81,5 @@ Documentación integrada con [openapi](https://swagger.io/specification/)
 
 Url: 
 `http://localhost:8000/docs`
+
+__nota__: Se agrega una db (sql_app.db) con información existente para hacer pruebas.

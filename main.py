@@ -2,14 +2,14 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from fastapi import Depends, FastAPI, status
+from fastapi import Depends, FastAPI, HTTPException, status
 
 from database import get_db
 from dependencies import get_current_comercio
 from models import Comercio as ComercioModel
 from models import Empleado as EmpleadoModel
 from schema import ComercioCreate, ComercioRetrieve
-from schema import EmpleadoCreate, EmpleadoRetrieve, EmpleadoUpdate
+from schema import EmpleadoCreate, EmpleadoRetrieve
 
 
 app = FastAPI()
@@ -82,6 +82,28 @@ async def get_empleados(
     return all_empleados
 
 
+@app.get(
+    '/empleados/{uuid}/',
+    response_model=EmpleadoRetrieve,
+    status_code=status.HTTP_200_OK
+)
+async def get_empleado(
+    uuid: str,
+    comercio: ComercioModel = Depends(get_current_comercio),
+    db: Session = Depends(get_db)
+) -> EmpleadoRetrieve:
+    empleado = db.query(EmpleadoModel).filter_by(
+        comercio=comercio.id,
+        uuid=uuid
+    ).first()
+    if not empleado:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Empleado no encontrado"
+        )
+    return empleado
+
+
 @app.put(
     '/empleados/{uuid}/',
     response_model=EmpleadoRetrieve,
@@ -89,7 +111,7 @@ async def get_empleados(
 )
 async def update_empleado(
     uuid: str,
-    empleado: EmpleadoUpdate,
+    empleado: EmpleadoCreate,
     comercio: ComercioModel = Depends(get_current_comercio),
     db: Session = Depends(get_db)
 ) -> EmpleadoRetrieve:
@@ -100,7 +122,10 @@ async def update_empleado(
         EmpleadoModel.uuid == uuid
     ).first()
     if not empleado_to_update:
-        return status.HTTP_404_NOT_FOUND
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Empleado no encontrado"
+        )
     empleado_to_update.nombre = empleado.nombre
     empleado_to_update.apellidos = empleado.apellidos
     empleado_to_update.pin = empleado.pin
@@ -125,6 +150,9 @@ async def delete_empleado(
         EmpleadoModel.uuid == uuid
     ).first()
     if not empleado_to_delete:
-        return status.HTTP_404_NOT_FOUND
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Empleado no encontrado"
+        )
     db.delete(empleado_to_delete)
     db.commit()
