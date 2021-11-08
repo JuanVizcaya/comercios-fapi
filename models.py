@@ -1,23 +1,25 @@
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BigInteger, Boolean
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relation, validates
-from sqlalchemy.sql import func
-
 import uuid as _uuid
 
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BigInteger, Boolean
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import validates
+from sqlalchemy.sql import func
 
-Base = declarative_base()
+from database import Base
+
+def generate_uuid():
+    return str(_uuid.uuid4())
 
 
 class Comercio(Base):
     __tablename__ = 'comercio'
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    uuid = Column(String(36), default=_uuid.uuid4, unique=True)
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    uuid = Column(String(36), default=generate_uuid, unique=True)
     nombre = Column(String(100))
     activo = Column(Boolean, default=True)
     email_contacto = Column(String(50), nullable=True)
     telefono_contacto = Column(String(15), nullable=True)
-    api_key = Column(String(36), default=_uuid.uuid4, unique=True)
+    api_key = Column(String(36), default=generate_uuid, unique=True)
     fecha_creacion = Column(DateTime, default=func.now())
 
     @validates('uuid')
@@ -35,8 +37,8 @@ class Comercio(Base):
 
 class Empleado(Base):
     __tablename__ = 'empleado'
-    id = Column(BigInteger, primary_key=True, autoincrement=True)
-    uuid = Column(String(36), default=_uuid.uuid4, unique=True)
+    id = Column(BigInteger().with_variant(Integer, "sqlite"), primary_key=True)
+    uuid = Column(String(36), default=generate_uuid, unique=True)
     nombre = Column(String(40))
     apellidos = Column(String(40))
     pin = Column(String(6))
