@@ -66,7 +66,7 @@ Se trata de un FastAPI Backend, con los métodos suficientes para administrar co
 
 Se realizaron las pruebas para el backend con [pytest](https://docs.pytest.org/en/latest/) y [flake8](https://flake8.readthedocs.io/en/latest/)
 
-Las pruebas furon realizadas para la creacion de comercios y el CRUD de empleados mediante su comercio asociado.
+Las pruebas fueron realizadas para la creacion de comercios y el CRUD de empleados mediante su comercio asociado.
 
 **Ejecutar con virtualenv/conda**
 
