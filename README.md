@@ -1,7 +1,7 @@
 # Administración de comercios y empleados
 Se trata de un FastAPI Backend, con los métodos suficientes para administrar comercios y empleados
 
-### Requisitos
+## Requisitos
 
 - Docker compose [Opcional](https://docs.docker.com/engine/install/)
 - Conda [Opcional](https://conda.io/projects/conda/en/latest/user-guide/install/index.html)
