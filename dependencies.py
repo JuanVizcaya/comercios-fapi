@@ -9,6 +9,7 @@ from models import Comercio as ComercioModel
 
 security = HTTPBasic()
 
+
 async def get_current_comercio(
     db: Session = Depends(get_db),
     credentials: HTTPBasicCredentials = Depends(security)
@@ -16,13 +17,12 @@ async def get_current_comercio(
     """ Obtiene el comercio medienta el api_key """
 
     print(credentials.username)
-    comercio_query = db.query(ComercioModel).filter_by(
+    comercio = db.query(ComercioModel).filter_by(
         api_key=credentials.username
-    )
-    if not comercio_query.count():
+    ).first()
+    if not comercio:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid credentials"
         )
-    comercio = comercio_query.first()
     return comercio

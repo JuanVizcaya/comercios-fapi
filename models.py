@@ -1,11 +1,19 @@
 import uuid as _uuid
 
-from sqlalchemy import Column, DateTime, ForeignKey, Integer, String, BigInteger, Boolean
-from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import (
+    Column,
+    DateTime,
+    ForeignKey,
+    Integer,
+    String,
+    BigInteger,
+    Boolean
+)
 from sqlalchemy.orm import validates
 from sqlalchemy.sql import func
 
 from database import Base
+
 
 def generate_uuid():
     return str(_uuid.uuid4())

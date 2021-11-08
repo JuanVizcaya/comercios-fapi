@@ -2,7 +2,6 @@ from typing import List
 
 from sqlalchemy.orm import Session
 
-from dotenv import load_dotenv
 from fastapi import Depends, FastAPI, status
 
 from database import get_db
@@ -15,11 +14,16 @@ from schema import EmpleadoCreate, EmpleadoRetrieve, EmpleadoUpdate
 
 app = FastAPI()
 
-@app.post("/comercios/", response_model=ComercioRetrieve)
+
+@app.post(
+    "/comercios/",
+    response_model=ComercioRetrieve,
+    status_code=status.HTTP_201_CREATED
+)
 async def add_comercio(
     comercio: ComercioCreate,
     db: Session = Depends(get_db)
-    ) -> ComercioRetrieve:
+) -> ComercioRetrieve:
     """ API: Agrega un comercio a la base de datos """
 
     new_comercio = ComercioModel(**comercio.dict())
@@ -27,22 +31,32 @@ async def add_comercio(
     db.commit()
     return new_comercio
 
-@app.get('/comercios/', response_model=List[ComercioRetrieve])
+
+@app.get(
+    '/comercios/',
+    response_model=List[ComercioRetrieve],
+    status_code=status.HTTP_200_OK
+)
 async def get_comercios(
     comercio: ComercioModel = Depends(get_current_comercio),
     db: Session = Depends(get_db)
-    ) -> List[ComercioRetrieve]:
+) -> List[ComercioRetrieve]:
     """ API: Obtiene todos los comercios """
 
     all_comercios = db.query(ComercioModel).all()
     return all_comercios
 
-@app.post('/empleados/', response_model=EmpleadoRetrieve)
+
+@app.post(
+    '/empleados/',
+    response_model=EmpleadoRetrieve,
+    status_code=status.HTTP_201_CREATED
+)
 async def add_empleado(
     empleado: EmpleadoCreate,
     comercio: ComercioModel = Depends(get_current_comercio),
     db: Session = Depends(get_db)
-    ) -> EmpleadoRetrieve:
+) -> EmpleadoRetrieve:
     """ API: Agrega un empleado a un comercio """
 
     new_empleado = EmpleadoModel(comercio=comercio.id, **empleado.dict())
@@ -50,11 +64,16 @@ async def add_empleado(
     db.commit()
     return new_empleado
 
-@app.get('/empleados/', response_model=List[EmpleadoRetrieve])
+
+@app.get(
+    '/empleados/',
+    response_model=List[EmpleadoRetrieve],
+    status_code=status.HTTP_200_OK
+)
 async def get_empleados(
     comercio: ComercioModel = Depends(get_current_comercio),
     db: Session = Depends(get_db)
-    ) -> List[EmpleadoRetrieve]:
+) -> List[EmpleadoRetrieve]:
     """ API: Obtiene todos los empleados de un comercio """
 
     all_empleados = db.query(EmpleadoModel).filter(
@@ -62,13 +81,18 @@ async def get_empleados(
     ).all()
     return all_empleados
 
-@app.put('/empleados/{uuid}/', response_model=EmpleadoRetrieve)
+
+@app.put(
+    '/empleados/{uuid}/',
+    response_model=EmpleadoRetrieve,
+    status_code=status.HTTP_200_OK
+)
 async def update_empleado(
     uuid: str,
     empleado: EmpleadoUpdate,
     comercio: ComercioModel = Depends(get_current_comercio),
     db: Session = Depends(get_db)
-    ) -> EmpleadoRetrieve:
+) -> EmpleadoRetrieve:
     """ API: Actualiza un empleado del comercio"""
 
     empleado_to_update = db.query(EmpleadoModel).filter(
@@ -78,18 +102,22 @@ async def update_empleado(
     if not empleado_to_update:
         return status.HTTP_404_NOT_FOUND
     empleado_to_update.nombre = empleado.nombre
-    empleado_to_update.apellido = empleado.apellido
-    empleado_to_update.dni = empleado.dni
-    empleado_to_update.telefono = empleado.telefono
+    empleado_to_update.apellidos = empleado.apellidos
+    empleado_to_update.pin = empleado.pin
+    empleado_to_update.activo = empleado.activo
     db.commit()
     return empleado_to_update
 
-@app.delete('/empleados/{uuid}/')
+
+@app.delete(
+    '/empleados/{uuid}/',
+    status_code=status.HTTP_204_NO_CONTENT
+)
 async def delete_empleado(
     uuid: str,
     comercio: ComercioModel = Depends(get_current_comercio),
     db: Session = Depends(get_db)
-    ) -> None:
+) -> None:
     """ API: Elimina un empleado del comercio """
 
     empleado_to_delete = db.query(EmpleadoModel).filter(

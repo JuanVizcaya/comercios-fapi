@@ -41,7 +41,7 @@ class EmpleadoCreate(BaseModel):
         schema_extra = {
             "example": {
                 "nombre": "Peter",
-                "apellido": "Parker",
+                "apellidos": "Parker",
                 "email_contacto": "pparker@avengers.com",
                 "pin": "000001",
                 "activo": True
