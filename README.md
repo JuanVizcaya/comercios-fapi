@@ -37,25 +37,29 @@ Se trata de un FastAPI Backend, con los métodos suficientes para administrar co
 
 ## Utilización
 
-### Aplicar migraciones
+### crear .env (basado en .env.default)
 
-**virtualenv/conda**
+- `cp .env.default .env`
 
-- `alembic upgrade head`
+### Aplicar migraciones (si es necesario)
 
 **Contenedor**
 
 - `docker-compose run --rm api alembic upgrade head`
 
-### Levantar el servidor
-
 **virtualenv/conda**
 
-- `uvicorn main:app --reload`
+- `alembic upgrade head`
+
+### Levantar el servidor
 
 **Contenedor**
 
 - `docker-compose up`
+
+**virtualenv/conda**
+
+- `uvicorn main:app --reload`
 
 
 ## Pruebas
